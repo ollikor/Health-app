@@ -8,6 +8,7 @@ import '../styles/styles.css';
 
 class FoodRecipes extends Component {
   render() {
+    console.log(this.props.match);
     return (
       <div className="col-sm-12">
         <div className="row justify-content-center">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
 import { InputGroup, FormControl, ButtonToolbar, Button, } from 'react-bootstrap';
-import { FaWeight, FaCalendarDay, FaTimes } from 'react-icons/fa';
+import { FaWeight, FaCalendarDay, FaTimes, FaHourglassStart, FaUtensils, FaGripfire } from 'react-icons/fa';
 
 import '../styles/styles.css';
 
@@ -14,7 +14,8 @@ class AddRecipe extends Component {
     ingredients: [],
     description: '',
     date: '',
-    error: false
+    error: false,
+    image: ''
   }
 
   handleSubmit = (e) => {
@@ -76,6 +77,11 @@ class AddRecipe extends Component {
     this.setState({ description: e.target.value });
   }
 
+  handleImage = (e) => {
+    console.log(e.target.files);
+    //this.setState({ image: e.target.files });
+  }
+
   render() {
     return (
       <div className="row justify-content-center addRecipeContainer">
@@ -85,6 +91,24 @@ class AddRecipe extends Component {
               <InputGroup.Text id="inputGroup-sizing-default"><FaWeight /></InputGroup.Text>
             </InputGroup.Prepend>
             <FormControl onChange={this.handleName} type="text" placeholder="Set name" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+          </InputGroup>
+          <InputGroup size="default" className="mb-3">
+            <InputGroup.Prepend>
+              <InputGroup.Text id="inputGroup-sizing-default"><FaHourglassStart /></InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl onChange={this.handleName} type="number" min="1" placeholder="Set duration (min)" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+          </InputGroup>
+          <InputGroup size="default" className="mb-3">
+            <InputGroup.Prepend>
+              <InputGroup.Text id="inputGroup-sizing-default"><FaUtensils /></InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl onChange={this.handleName} type="number" min="1" placeholder="Set portions" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+          </InputGroup>
+          <InputGroup size="default" className="mb-3">
+            <InputGroup.Prepend>
+              <InputGroup.Text id="inputGroup-sizing-default"><FaGripfire /></InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl onChange={this.handleName} type="number" min="1" placeholder="Set oven temperature" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
           </InputGroup>
           <InputGroup size="default" className="mb-3">
             <InputGroup.Prepend>
@@ -114,6 +138,9 @@ class AddRecipe extends Component {
               </ul>
             </div>
           ))}
+          <InputGroup size="default" className="mb-3">
+            <FormControl className="getPicture" onChange={this.handleImage} type="file" placeholder="Set picture" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+          </InputGroup>
           <InputGroup>
             <InputGroup.Prepend>
               <InputGroup.Text>Description</InputGroup.Text>

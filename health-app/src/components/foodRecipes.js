@@ -1,6 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import axios from 'axios';
 
 import { FaHourglassStart, FaUtensils } from 'react-icons/fa';
 import tortilla from '../images/tortilla.jpg';
@@ -12,10 +13,32 @@ import AddRecipe from './addRecipe';
 class FoodRecipes extends Component {
 
   state = {
-    addRecipe: false
+    addRecipe: false,
+    recipes: []
+  }
+
+  componentDidMount(){
+
+    let recipes = [];
+
+    const url = 'http://localhost:8000/recipes';
+    axios.get(url)
+    .then( (response) => {
+        console.log(response);
+        response.data.forEach((bodyData) => {
+          recipes.push(bodyData);
+        });
+        this.setState({
+          recipes: recipes
+        })
+    })
+    .catch(function(error){
+        console.log(error);
+    });
   }
 
   render() {
+    console.log(this.state.recipes);
     return (
       <div className="col-sm-12">
         <div className="addRecipeContent">
@@ -27,7 +50,22 @@ class FoodRecipes extends Component {
           <AddRecipe />
         : null }
         <div className="row justify-content-center">
-          <div className="col-sm-4">
+        {
+          this.state.recipes.map((item, index) => (
+          <div key={index} className="col-sm-4">
+            <NavLink className="navLinkSecond" to={`/foodRecipes/${item.name}`}>
+              <div className="recipesCardContainer">
+                <img className="recipesCardImage" src={pannukakku} alt="pannukakku" />
+                <p className="recipesCardTitle">{item.name}</p>
+                <div className="recipesBodyItems">
+                  <p>{item.duration} min <FaHourglassStart /></p>
+                  <p>{item.portions} annosta <FaUtensils /></p>
+                </div>
+              </div>
+          </NavLink>
+          </div>
+        ))}
+          {/* <div className="col-sm-4">
             <div className="recipesCardContainer">
               <img className="recipesCardImage" src={tortilla} alt="tortilla" />
               <p className="recipesCardTitle">Meksikolainen tortilla</p>
@@ -48,7 +86,7 @@ class FoodRecipes extends Component {
                 </div>
               </div>
             </NavLink>
-          </div>
+          </div> */}
         </div>
       </div>
     );

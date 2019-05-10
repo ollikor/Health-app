@@ -3,6 +3,7 @@
 **********/
 
 .container {
+  overflow: hidden;
   display: block;
   padding: 0px;
 }
@@ -111,6 +112,15 @@
   margin-left: 5px;
   margin-bottom: 3px;
   font-size: 20px;
+}
+
+.getPicture {
+ border: 1px solid #ced4da;
+ border-radius: 0.25rem;
+ padding: 10px 10px;
+ outline: none !important;
+ background-color: #ffffff;
+ color: gray;
 }
 
 /***************
