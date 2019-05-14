@@ -1,60 +1,62 @@
 import React from 'react';
 import { Component } from 'react';
+import axios from 'axios';
 import { InputGroup, FormControl, ButtonToolbar, Button, } from 'react-bootstrap';
-import { FaWeight, FaCalendarDay, FaTimes, FaHourglassStart, FaUtensils, FaGripfire } from 'react-icons/fa';
+import { FaBreadSlice, FaCalendarDay, FaTimes, FaHourglassStart, FaUtensils, FaGripfire } from 'react-icons/fa';
 
 import '../styles/styles.css';
+import { read } from 'fs';
 
 class AddRecipe extends Component {
 
 
   state = {
     name: '',
+    duration: '',
+    portions: '',
+    temperature: '',
     ingredient: '',
     ingredients: [],
     description: '',
     date: '',
     error: false,
-    image: ''
+    file: '',
+    imagePreviewUrl: ''
   }
 
   handleSubmit = (e) => {
 		if (
 			this.state.name === '' ||
+			this.state.duration === '' ||
+			this.state.portions === '' ||
+			this.state.temperature === '' ||
 			this.state.date === '' ||
 			this.state.ingredients.length < 0 ||
-			this.state.description === '') {
+      this.state.description === '') {
 			this.setState({ error: true });
 		} else {
 
 			const newItem = {
-				name: this.state.name,
+        name: this.state.name,
+        duration: this.state.duration,
+        portions: this.state.portions,
+        temperature: this.state.temperature,
 				date: this.state.date,
 				ingredients: this.state.ingredients,
-				description: this.state.description,
+        description: this.state.description,
       }
-      console.log(newItem);
-			// const url = 'http://localhost:8000';
-			// axios.post(url, newItem)
-			// 	.then((response) => {
-			// 		window.location.reload();
-      //     //console.log(response);
-      //     alert('Tiedot tallennettu onnistuneesti');
-			// 	})
-			// 	.catch((error) => {
-      //     //console.log(error);
-      //     alert('Tietojen tallennus epäonnistui');
-			// 	});
+      const url = 'http://localhost:8000/recipes';
+      axios.post(url, newItem)
+      .then((response) => {
+        //window.location.reload();
+          //console.log(response);
+      })
+      .catch((error) => {
+          //console.log(error);
+      });
+      this.props.onHide();
   }
 }
-
-  handleName = (e) => {
-    this.setState({ name: e.target.value });
-  }
-
-  handleIngredients = (e) => {
-    this.setState({ ingredient: e.target.value });
-  }
 
   AddIngredient = (e) => {
     const ingredient = this.state.ingredient;
@@ -69,17 +71,16 @@ class AddRecipe extends Component {
     this.setState({ ingredients: ingredients });
   }
 
-  handleDate = (e) => {
-    this.setState({ date: e.target.value });
-  }
-
-  handleDescription = (e) => {
-    this.setState({ description: e.target.value });
-  }
-
   handleImage = (e) => {
-    console.log(e.target.files);
-    //this.setState({ image: e.target.files });
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        imagePreviewUrl: reader.result
+      })
+    }
+    reader.readAsDataURL(file);
   }
 
   render() {
@@ -88,38 +89,38 @@ class AddRecipe extends Component {
         <div className="col-sm-6 setBodyinformation">
           <InputGroup size="default" className="mb-3">
             <InputGroup.Prepend>
-              <InputGroup.Text id="inputGroup-sizing-default"><FaWeight /></InputGroup.Text>
+              <InputGroup.Text id="inputGroup-sizing-default"><FaBreadSlice /></InputGroup.Text>
             </InputGroup.Prepend>
-            <FormControl onChange={this.handleName} type="text" placeholder="Set name" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+            <FormControl onChange={(e) => this.setState({name: e.target.value})} type="text" placeholder="Set name" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
           </InputGroup>
           <InputGroup size="default" className="mb-3">
             <InputGroup.Prepend>
               <InputGroup.Text id="inputGroup-sizing-default"><FaHourglassStart /></InputGroup.Text>
             </InputGroup.Prepend>
-            <FormControl onChange={this.handleName} type="number" min="1" placeholder="Set duration (min)" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+            <FormControl onChange={(e) => this.setState({duration: e.target.value})} type="number" min="1" placeholder="Set duration (min)" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
           </InputGroup>
           <InputGroup size="default" className="mb-3">
             <InputGroup.Prepend>
               <InputGroup.Text id="inputGroup-sizing-default"><FaUtensils /></InputGroup.Text>
             </InputGroup.Prepend>
-            <FormControl onChange={this.handleName} type="number" min="1" placeholder="Set portions" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+            <FormControl onChange={(e) => this.setState({portions: e.target.value})} type="number" min="1" placeholder="Set portions" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
           </InputGroup>
           <InputGroup size="default" className="mb-3">
             <InputGroup.Prepend>
               <InputGroup.Text id="inputGroup-sizing-default"><FaGripfire /></InputGroup.Text>
             </InputGroup.Prepend>
-            <FormControl onChange={this.handleName} type="number" min="1" placeholder="Set oven temperature" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+            <FormControl onChange={(e) => this.setState({temperature: e.target.value})} type="number" min="1" placeholder="Set oven temperature" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
           </InputGroup>
           <InputGroup size="default" className="mb-3">
             <InputGroup.Prepend>
               <InputGroup.Text id="inputGroup-sizing-default"><FaCalendarDay /></InputGroup.Text>
             </InputGroup.Prepend>
-            <FormControl onChange={this.handleDate} type="date" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+            <FormControl onChange={(e) => this.setState({date: e.target.value})} type="date" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
           </InputGroup>
           <InputGroup className="mb-3">
             <FormControl
               value={this.state.ingredient}
-              onChange={this.handleIngredients}
+              onChange={(e) => this.setState({ingredient: e.target.value})}
               placeholder="Add ingredient"
               aria-label="Add ingredient"
               aria-describedby="basic-addon2"
@@ -142,10 +143,11 @@ class AddRecipe extends Component {
             <FormControl className="getPicture" onChange={this.handleImage} type="file" placeholder="Set picture" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
           </InputGroup>
           <InputGroup>
-            <InputGroup.Prepend>
-              <InputGroup.Text>Description</InputGroup.Text>
-            </InputGroup.Prepend>
-            <FormControl onChange={this.handleDescription} className="description" as="textarea" aria-label="With textarea" />
+          {this.state.imagePreviewUrl !== '' ?<img className="loadedImage" src={this.state.imagePreviewUrl} alt="dsaf" />:null}
+          <InputGroup.Prepend>
+            <InputGroup.Text>Description</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl onChange={(e) => this.setState({description: e.target.value})} className="description" as="textarea" aria-label="With textarea" />
           </InputGroup>
           { this.state.error ? <p className="smallError">Check all fields</p> : null }
           <ButtonToolbar>

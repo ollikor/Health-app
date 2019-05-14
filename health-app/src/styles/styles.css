@@ -25,15 +25,28 @@
 }
 
 /*******
-  Home
+  Card
 *******/
 
+.navLinkCard {
+  color: black;
+  text-decoration: none;
+}
+.navLinkCard:hover {
+  text-decoration: none;
+  color: green;
+}
 .cardContainer {
   width: 100%;
-  padding: 30px;
+  padding-bottom: 30px;
   margin-bottom: 20px;
   box-shadow: 0px 0px 5px;
   text-align: center;
+}
+.cardImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
 }
 .cardIcon {
   font-size: 100px;
@@ -41,9 +54,6 @@
 .cardTitle {
   margin: 20px;
   font-size: 20px;
-}
-.bodyItems {
-
 }
 
 /*******************
@@ -61,7 +71,7 @@
 }
 
 /***************
-  Food recipes
+  Add food recipes
 ***************/
 
 .addRecipeContainer {
@@ -123,14 +133,61 @@
  color: gray;
 }
 
-/***************
-  Food recipe
-***************/
+.loadedImage {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
 
+/***************
+  Single food recipe
+***************/
+.recipeContainer {
+  padding: 0;
+}
+.recipesCardContainer {
+  width: 100%;
+  padding-bottom: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0px 0px 5px;
+  text-align: center;
+}
+.recipesCardContainer:hover {
+  box-shadow: 0px 0px 5px red;
+}
+.recipesCardContainer:hover .recipeCardImage {
+  opacity: 0.3;
+}
+.recipesCardContainer:hover .recipeDeleteIconContent {
+  opacity: 1;
+}
+.recipeDeleteIconContent {
+  z-index: 1;
+  transition: .5s ease;
+  position: absolute;
+  right: 0;
+  font-size: 30px;
+  color: red;
+  opacity: 0;
+  padding-right: 10px;
+  /* transform: translate(-0%, -0%);
+  -ms-transform: translate(-50%, -50%); */
+}
+.recipesCardTitle {
+  margin: 20px;
+  font-size: 20px;
+}
+.recipesBodyItems {
+  font-size: 18px;
+}
 .recipeCardImage {
   width: 100%;
   height: 340px;
   object-fit: cover;
+  transition: .5s ease;
+  backface-visibility: hidden;
 }
 .recipeBodyItems {
   text-align: left;
@@ -141,14 +198,6 @@
   margin: 0;
   padding: 0;
   list-style-type: none;
-}
-.navLinkSecond {
-  color: black;
-  text-decoration: none;
-}
-.navLinkSecond:hover {
-  text-decoration: none;
-  color: green;
 }
 
 .infoItem {
@@ -167,13 +216,21 @@
   margin-top: 50px;
 }
 
+/*********
+  Error
+*********/
+
 .error {
   font-size: 30px;
   color: red;
   text-align: center;
 }
 
-.setBodyinformation {
+/*********
+  Set body composition
+*********/
+
+.setBodyComposition{
   margin-top: 30px;
 }
 
@@ -199,7 +256,7 @@
     Recipe
   *********/
 
-  .r2BodyItems {
+  .recipeBodyItems {
     text-align: left;
     font-size: 18px;
     margin-bottom: 20px;

@@ -6,7 +6,7 @@ import { FaWeight, FaCalendarDay } from 'react-icons/fa';
 
 import '../styles/styles.css';
 
-class SetBodyinformation extends Component {
+class SetBodyComposition extends Component {
 
   state = {
     weight: '',
@@ -24,16 +24,16 @@ class SetBodyinformation extends Component {
 			this.state.date === '') {
 			this.setState({ error: true });
 		} else {
-      const weight = this.state.weight;
-      const fat = this.state.fat;
-			const fatkg = this.state.weight * this.state.fat / 100
-      const muscle = this.state.weight * this.state.muscle / 100
+      const weight = parseFloat(this.state.weight).toFixed(2);
+      const fat = parseFloat(this.state.fat).toFixed(2);
+			const fatkg = parseFloat(this.state.weight * this.state.fat / 100).toFixed(2);
+      const muscle = parseFloat(this.state.weight * this.state.muscle / 100).toFixed(2);
 
 			const newItem = {
-				weight: weight,
+        weight: weight,
 				fat: fat,
-				fatkg: fatkg.toString(),
-				muscle: muscle.toString(),
+				fatkg: fatkg,
+				muscle: muscle,
 				date: this.state.date,
       }
 
@@ -51,52 +51,64 @@ class SetBodyinformation extends Component {
   }
 }
 
-  handleWeight = (e) => {
-    this.setState({ weight: e.target.value });
-  }
-
-  handleFat = (e) => {
-    this.setState({ fat: e.target.value });
-  }
-
-  handleMuscle = (e) => {
-    this.setState({ muscle: e.target.value });
-  }
-
-  handleDate = (e) => {
-    this.setState({ date: e.target.value });
-  }
-
   render() {
     return (
-      <div className="col-sm-4 setBodyinformation">
+      <div className="col-sm-4 setBodyComposition">
         <InputGroup size="default" className="mb-3">
           <InputGroup.Prepend>
             <InputGroup.Text id="inputGroup-sizing-default"><FaWeight /></InputGroup.Text>
           </InputGroup.Prepend>
-          <FormControl onChange={this.handleWeight} type="number" placeholder="Set weight" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+          <FormControl
+            onChange={(e) => this.setState({weight: e.target.value})}
+            type="number"
+            placeholder="Set weight"
+            aria-label="Small"
+            aria-describedby="inputGroup-sizing-sm"
+          />
         </InputGroup>
         <InputGroup size="default" className="mb-3">
           <InputGroup.Prepend>
             <InputGroup.Text id="inputGroup-sizing-default"><FaWeight /></InputGroup.Text>
           </InputGroup.Prepend>
-          <FormControl onChange={this.handleFat} type="number" placeholder="Set fat %" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+          <FormControl
+            onChange={(e) => this.setState({fat: e.target.value})}
+            type="number"
+            placeholder="Set fat %"
+            aria-label="Small"
+            aria-describedby="inputGroup-sizing-sm"
+          />
         </InputGroup>
         <InputGroup size="default" className="mb-3">
           <InputGroup.Prepend>
             <InputGroup.Text id="inputGroup-sizing-default"><FaWeight /></InputGroup.Text>
           </InputGroup.Prepend>
-          <FormControl onChange={this.handleMuscle} type="number" placeholder="Set muscle %" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+          <FormControl
+            onChange={(e) => this.setState({muscle: e.target.value})}
+            type="number"
+            placeholder="Set muscle %"
+            aria-label="Small"
+            aria-describedby="inputGroup-sizing-sm"
+          />
         </InputGroup>
         <InputGroup size="default" className="mb-3">
           <InputGroup.Prepend>
             <InputGroup.Text id="inputGroup-sizing-default"><FaCalendarDay /></InputGroup.Text>
           </InputGroup.Prepend>
-          <FormControl onChange={this.handleDate} type="date" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+          <FormControl
+            onChange={(e) => this.setState({date: e.target.value})}
+            type="date"
+            aria-label="Small"
+            aria-describedby="inputGroup-sizing-sm"
+          />
         </InputGroup>
         { this.state.error ? <p className="smallError">Check all fields</p> : null }
         <ButtonToolbar>
-          <Button onClick={this.handleSubmit} variant="secondary" size="mg" active>
+          <Button
+            onClick={this.handleSubmit}
+            variant="secondary"
+            size="mg"
+            active
+          >
             Save
           </Button>
         </ButtonToolbar>
@@ -105,4 +117,4 @@ class SetBodyinformation extends Component {
   }
 }
 
-export default SetBodyinformation;
+export default SetBodyComposition;

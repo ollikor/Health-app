@@ -8,9 +8,11 @@ import Footer from './components/footer';
 import BodyComposition from './components/bodyComposition';
 import FoodRecipes from './components/foodRecipes';
 import Recipe from './components/recipe';
+import YoutubeVideos from './components/youtubeVideos';
 import Error from './components/error';
 
 import './styles/styles.css';
+import youtubeVideos from './components/youtubeVideos';
 
 class App extends Component {
   render() {
@@ -25,8 +27,8 @@ class App extends Component {
                 <Route path="/home" component={Home} />
                 <Route path="/bodyComposition" component={BodyComposition} />
                 <Route path="/foodRecipes" exact component={FoodRecipes} />
-                <Route path="/foodRecipes/:recipe" component={Recipe} />
-                <Route path="/youtubeVideos" component={Home} />
+                <Route path="/foodRecipes/:id" component={Recipe} />
+                <Route path="/youtubeVideos" component={YoutubeVideos} />
                 <Route component={Error} />
               </Switch>
               <Footer />

@@ -1,50 +1,67 @@
 import React from 'react';
 import { Component } from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 import '../styles/styles.css';
 
-//import options from './chartOptions';
-import SetBodyinformation from './setBodyinformation';
+import SetBodyComposition from './setBodyComposition';
+import DeleteModal from './deleteModal';
 
 class BodyComposition extends Component {
 
   state = {
-    chartData: {},
-    weight: [],
-    fat: [],
-    fatkg: [],
-    muscle: [],
-    date: []
+    id: '',
+    modalShow: false,
+    onHide: true,
+    weight: '',
+    fat: '',
+    fatkg: '',
+    muscle: '',
+    date: ''
   }
 
   componentDidMount(){
+    this.getBodyComposition();
+  }
+
+  deleteBody = (e) => {
+    const date = e.point.category;
+    this.setState({modalShow: true, id: date});
+  }
+
+  getBodyComposition = () => {
     const weight = [];
     const fat = [];
     const fatkg = [];
     const muscle = [];
     const date = [];
+    let data = null;
 
     const url = 'http://localhost:8000/';
     axios.get(url)
     .then( (response) => {
-        //console.log(response);
+        console.log(response);
         response.data.forEach((bodyData) => {
+            data = bodyData;
             weight.push(parseFloat(bodyData.weight));
             fat.push(parseFloat(bodyData.fat));
             fatkg.push(parseFloat(bodyData.fatkg));
             muscle.push(parseFloat(bodyData.muscle));
             date.push(bodyData.date);
         });
-        this.setState({
-          weight: weight,
-          fat: fat,
-          fatkg: fatkg,
-          muscle: muscle,
-          date: date
-        })
+        if(data !== null) {
+          this.setState({
+            weight: weight,
+            fat: fat,
+            fatkg: fatkg,
+            muscle: muscle,
+            date: date
+          })
+        }
+        // this.props.addBody(weight, fat, fatkg, muscle, date);
     })
     .catch(function(error){
         console.log(error);
@@ -52,8 +69,18 @@ class BodyComposition extends Component {
   }
 
   render() {
+    let modalClose = () => this.setState({ modalShow: false });
     return (
       <div className="col-sm-12 p-0">
+          <DeleteModal
+            title={"Remove bodycomposition"}
+            description={"Are you sure that you want to remove this bodycomposition?"}
+            url={''}
+            move={'/bodyComposition'}
+            id={this.state.id}
+            show={this.state.modalShow}
+            onHide={modalClose}
+          />
           <HighchartsReact
             highcharts={Highcharts}
             options={{
@@ -71,9 +98,6 @@ class BodyComposition extends Component {
                 tickInterval: 1,
                 type: 'datetime',
                 labels: {
-                  // formatter: function () {
-                  //   return Highcharts.dateFormat('%H', this.value);
-                  // },
                   align: 'left',
                   x: -4,
                   y: -4
@@ -81,7 +105,6 @@ class BodyComposition extends Component {
                 tickColor: 'red',
                 tickWidth: 5,
                 categories: this.state.date
-                //categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
               },
               yAxis: [{
                 title: {
@@ -153,11 +176,11 @@ class BodyComposition extends Component {
               plotOptions:{
                 series:{
                     cursor: 'pointer',
-                   /*  events: {
-                      click: function (e) {
-                        alert('dsfa');
+                    events: {
+                      click: (e) => {
+                        this.deleteBody(e)
                       }
-                    }, */
+                    },
                     //pointStart:Date.UTC(2018,0,1),
                     // pointInterval: 7 * 24 * 60 * 60 * 1000
                     pointInterval: 1
@@ -187,10 +210,18 @@ class BodyComposition extends Component {
               pointInterval: 1
             }}
           />
-          <SetBodyinformation />
+          <SetBodyComposition />
       </div>
     );
   }
 }
 
-export default BodyComposition;
+const mapStateToProps = state => ({
+  date: state.body.date,
+  weight: state.body.weight,
+  fat: state.body.fat,
+  fatkg: state.body.fatkg,
+  muscle: state.body.muscle,
+});
+
+export default connect(mapStateToProps)(BodyComposition);
