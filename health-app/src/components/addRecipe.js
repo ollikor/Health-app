@@ -1,11 +1,16 @@
 import React from 'react';
 import { Component } from 'react';
-import axios from 'axios';
+
 import { InputGroup, FormControl, ButtonToolbar, Button, } from 'react-bootstrap';
+
 import { FaBreadSlice, FaCalendarDay, FaTimes, FaHourglassStart, FaUtensils, FaGripfire } from 'react-icons/fa';
 
 import '../styles/styles.css';
-import { read } from 'fs';
+
+import { addRecipe } from '../api';
+
+import SavedModal from './savedModal';
+
 
 class AddRecipe extends Component {
 
@@ -21,10 +26,11 @@ class AddRecipe extends Component {
     date: '',
     error: false,
     file: '',
-    imagePreviewUrl: ''
+    imagePreviewUrl: '',
+    show: false
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = async () => {
 		if (
 			this.state.name === '' ||
 			this.state.duration === '' ||
@@ -33,8 +39,12 @@ class AddRecipe extends Component {
 			this.state.date === '' ||
 			this.state.ingredients.length < 0 ||
       this.state.description === '') {
+      console.log('this.state.file');
+      console.log(this.state.file);
 			this.setState({ error: true });
 		} else {
+      // const file = this.state.file;
+      // const image = this.getBase64(file);
 
 			const newItem = {
         name: this.state.name,
@@ -45,18 +55,23 @@ class AddRecipe extends Component {
 				ingredients: this.state.ingredients,
         description: this.state.description,
       }
-      const url = 'http://localhost:8000/recipes';
-      axios.post(url, newItem)
-      .then((response) => {
-        //window.location.reload();
-          //console.log(response);
-      })
-      .catch((error) => {
-          //console.log(error);
-      });
-      this.props.onHide();
+      const data = await addRecipe(newItem);
+      // if(data.data.n === 1 && data.data.ok === 1){
+      //   this.setState({
+      //     show: true,
+      //   });
+      //   this.timer();
+        this.props.onHide();
+      //   this.props.update();
+      // }
+    }
   }
-}
+
+  // timer = () => {
+  //   setTimeout(() => {
+  //     this.setState({show: false});
+  //   }, 1000);
+  // }
 
   AddIngredient = (e) => {
     const ingredient = this.state.ingredient;
@@ -81,11 +96,26 @@ class AddRecipe extends Component {
       })
     }
     reader.readAsDataURL(file);
+    console.log(file);
+    this.getBase64(file);
+  }
+
+  getBase64(file){
+    console.log('fdsfa');
+    console.log(file);
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      let base64 = reader.result;
+      console.log('base64');
+      console.log(base64);
+    }
   }
 
   render() {
     return (
       <div className="row justify-content-center addRecipeContainer">
+        {/* <SavedModal show={this.state.show} saved={'Body composition added'} /> */}
         <div className="col-sm-6 setBodyinformation">
           <InputGroup size="default" className="mb-3">
             <InputGroup.Prepend>
@@ -139,9 +169,9 @@ class AddRecipe extends Component {
               </ul>
             </div>
           ))}
-          <InputGroup size="default" className="mb-3">
+          {/* <InputGroup size="default" className="mb-3">
             <FormControl className="getPicture" onChange={this.handleImage} type="file" placeholder="Set picture" aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
-          </InputGroup>
+          </InputGroup> */}
           <InputGroup>
           {this.state.imagePreviewUrl !== '' ?<img className="loadedImage" src={this.state.imagePreviewUrl} alt="dsaf" />:null}
           <InputGroup.Prepend>

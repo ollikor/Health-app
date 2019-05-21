@@ -1,11 +1,13 @@
 import React from 'react';
 import { Component } from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
+
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 import '../styles/styles.css';
+
+import { getBodyComposition } from '../api';
 
 import SetBodyComposition from './setBodyComposition';
 import DeleteModal from './deleteModal';
@@ -14,58 +16,26 @@ class BodyComposition extends Component {
 
   state = {
     id: '',
+    body: '',
     modalShow: false,
     onHide: true,
-    weight: '',
-    fat: '',
-    fatkg: '',
-    muscle: '',
-    date: ''
+    update: false
   }
 
   componentDidMount(){
-    this.getBodyComposition();
+    this.update()
+  }
+
+  async update() {
+    const body = await getBodyComposition();
+    this.setState({
+      body: body
+    })
   }
 
   deleteBody = (e) => {
     const date = e.point.category;
     this.setState({modalShow: true, id: date});
-  }
-
-  getBodyComposition = () => {
-    const weight = [];
-    const fat = [];
-    const fatkg = [];
-    const muscle = [];
-    const date = [];
-    let data = null;
-
-    const url = 'http://localhost:8000/';
-    axios.get(url)
-    .then( (response) => {
-        console.log(response);
-        response.data.forEach((bodyData) => {
-            data = bodyData;
-            weight.push(parseFloat(bodyData.weight));
-            fat.push(parseFloat(bodyData.fat));
-            fatkg.push(parseFloat(bodyData.fatkg));
-            muscle.push(parseFloat(bodyData.muscle));
-            date.push(bodyData.date);
-        });
-        if(data !== null) {
-          this.setState({
-            weight: weight,
-            fat: fat,
-            fatkg: fatkg,
-            muscle: muscle,
-            date: date
-          })
-        }
-        // this.props.addBody(weight, fat, fatkg, muscle, date);
-    })
-    .catch(function(error){
-        console.log(error);
-    });
   }
 
   render() {
@@ -104,7 +74,7 @@ class BodyComposition extends Component {
                 },
                 tickColor: 'red',
                 tickWidth: 5,
-                categories: this.state.date
+                categories: this.state.body.date
               },
               yAxis: [{
                 title: {
@@ -190,38 +160,38 @@ class BodyComposition extends Component {
                 name: 'Weight/kg',
                 color: '#0099ff',
                 yAxis: 0,
-                data: this.state.weight
+                data: this.state.body.weight
               },{
                 name: 'Fat/%',
                 color: '#b30000',
                 yAxis: 1,
-                data: this.state.fat
+                data: this.state.body.fat
               },{
                 name: 'Fat/kg',
                 color: '#ff9900',
                 yAxis: 2,
-                data: this.state.fatkg
+                data: this.state.body.fatkg
               },{
                 name: 'Muscle/kg',
                 color: '#009900',
                 yAxis: 3,
-                data: this.state.muscle
+                data: this.state.body.muscle
               }],
               pointInterval: 1
             }}
           />
-          <SetBodyComposition />
+          <SetBodyComposition update={()=> this.update()} />
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  date: state.body.date,
-  weight: state.body.weight,
-  fat: state.body.fat,
-  fatkg: state.body.fatkg,
-  muscle: state.body.muscle,
+  // date: state.body.date,
+  // weight: state.body.weight,
+  // fat: state.body.fat,
+  // fatkg: state.body.fatkg,
+  // muscle: state.body.muscle,
 });
 
 export default connect(mapStateToProps)(BodyComposition);

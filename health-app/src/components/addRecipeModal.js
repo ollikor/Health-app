@@ -6,6 +6,10 @@ import { Button,Modal } from 'react-bootstrap';
 import AddRecipe from './addRecipe';
 
 class AddRecipeModal extends Component {
+
+  update2 = () => {
+  }
+
   render() {
     return (
       <Modal

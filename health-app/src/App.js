@@ -9,10 +9,10 @@ import BodyComposition from './components/bodyComposition';
 import FoodRecipes from './components/foodRecipes';
 import Recipe from './components/recipe';
 import YoutubeVideos from './components/youtubeVideos';
+import Video from './components/video';
 import Error from './components/error';
 
 import './styles/styles.css';
-import youtubeVideos from './components/youtubeVideos';
 
 class App extends Component {
   render() {
@@ -28,7 +28,8 @@ class App extends Component {
                 <Route path="/bodyComposition" component={BodyComposition} />
                 <Route path="/foodRecipes" exact component={FoodRecipes} />
                 <Route path="/foodRecipes/:id" component={Recipe} />
-                <Route path="/youtubeVideos" component={YoutubeVideos} />
+                <Route path="/youtubeVideos" exact component={YoutubeVideos} />
+                <Route path="/youtubeVideos/:id" component={Video} />
                 <Route component={Error} />
               </Switch>
               <Footer />

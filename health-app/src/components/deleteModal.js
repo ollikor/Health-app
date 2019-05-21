@@ -1,23 +1,22 @@
 import React from 'react';
 import { Component } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import { Button,Modal } from 'react-bootstrap';
 
-class AddRecipeModal extends Component {
+import { removeChannel } from '../api';
+
+class deleteModal extends Component {
+
   handleDelete = () => {
-    const url = `http://localhost:8000/${this.props.url}${this.props.id}`;
-    console.log(url);
-    axios.delete(url)
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    const urlName = this.props.url;
+    const id = this.props.id;
+
+    removeChannel(urlName, id);
     this.props.onHide();
   }
+
   render() {
     return (
       <Modal {...this.props}>
@@ -40,4 +39,12 @@ class AddRecipeModal extends Component {
   }
 }
 
-export default AddRecipeModal;
+const mapStateToProps = state => ({
+  recipes: state.recipes.recipes,
+});
+
+const mapDispatchToProps = dispatch => ({
+  // aaa: (id) => {dispatch({type: 'UPDATE', id})},
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(deleteModal);

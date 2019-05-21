@@ -8,7 +8,7 @@ import '../styles/styles.css';
 class Navigation extends Component {
   render(){
     return (
-      <Navbar className="navbar navbar-dark bg-dark" expand="lg">
+      <Navbar className="navbar navbar-light bg-light" expand="lg">
         <Navbar.Brand>Health App</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

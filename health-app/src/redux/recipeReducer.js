@@ -12,6 +12,11 @@ const recipes = (state = initialState, action) => {
       const newState = {...state};
       newState.recipes = action.recipes;
       return newState
+    case 'UPDATE':
+      const nestate = {...state};
+      nestate.update = !state.update;
+      console.log(nestate);
+      return nestate;
     default:
       return state
   }
