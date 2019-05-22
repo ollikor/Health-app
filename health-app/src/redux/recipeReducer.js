@@ -1,7 +1,7 @@
 
 const initialState = {
   recipes: [],
-  update: false
+  // update: false
 }
 
 const recipes = (state = initialState, action) => {
@@ -12,11 +12,11 @@ const recipes = (state = initialState, action) => {
       const newState = {...state};
       newState.recipes = action.recipes;
       return newState
-    case 'UPDATE':
-      const nestate = {...state};
-      nestate.update = !state.update;
-      console.log(nestate);
-      return nestate;
+    // case 'UPDATE':
+    //   const nestate = {...state};
+    //   nestate.update = !state.update;
+    //   console.log(nestate);
+    //   return nestate;
     default:
       return state
   }

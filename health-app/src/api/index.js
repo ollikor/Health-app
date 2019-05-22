@@ -5,6 +5,7 @@ import axios from 'axios';
 
 const API = '';
 
+// Get latest bodycomposition for the homepage
 export async function getLatestBodyComposition() {
     try {
       const url = 'http://localhost:8000/latestBodycomposition';
@@ -15,6 +16,8 @@ export async function getLatestBodyComposition() {
     }
 }
 
+// Get all bodycompositions for the body composition page
+// and convert data to float
 export async function getBodyComposition() {
   const weight = [];
   const fat = [];
@@ -38,6 +41,7 @@ export async function getBodyComposition() {
   }
 }
 
+// Set body composition to database from bodycomposition page
 export async function setBodyComposition(newItem) {
   try {
     const url = 'http://localhost:8000';
@@ -50,6 +54,7 @@ export async function setBodyComposition(newItem) {
 
 // Recipes api calls
 
+// Get all recipes for the food recipes page
 export async function getRecipes() {
   try {
     const url = `http://localhost:8000/recipes`;
@@ -60,6 +65,7 @@ export async function getRecipes() {
   }
 }
 
+// Get current recipe using id for the specific recipe page
 export async function getRecipe(id) {
   try {
     const url = `http://localhost:8000/recipe/${id}`;
@@ -70,6 +76,7 @@ export async function getRecipe(id) {
   }
 }
 
+// Get latest recipe for the homepage
 export async function getLatestRecipe() {
   try {
     const url = 'http://localhost:8000/latestRecipe';
@@ -80,6 +87,7 @@ export async function getLatestRecipe() {
   }
 }
 
+// Add recipe to database from foodrecipes page
 export async function addRecipe(newItem) {
   try {
     const url = 'http://localhost:8000/recipes';
@@ -93,15 +101,18 @@ export async function addRecipe(newItem) {
 
 // Youtube videos api calls
 
+// Save youtube channel using channel name and id
 export async function saveChannel(newItem) {
   try {
     const url = 'http://localhost:8000/channels';
-    await axios.post(url, newItem)
+    const data = await axios.post(url, newItem)
+    return data;
   } catch (error) {
     console.log(error);
   }
 }
 
+// Remove youtube channel using id
 export async function removeChannel(urlName, id) {
   try {
     const url = `http://localhost:8000/${urlName}${id}`;
@@ -111,6 +122,7 @@ export async function removeChannel(urlName, id) {
   }
 }
 
+// Save channel which latest video you want show on homepage
 export async function showOnHomepage(id) {
   const newItem = {
     channelId: id,
@@ -124,16 +136,7 @@ export async function showOnHomepage(id) {
   }
 }
 
-export async function getChannelsFromDB() {
-  try {
-    const url = 'http://localhost:8000/channels';
-    const data = await axios.get(url);
-    return data.data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
+// Get channel id which latest video you want show on homepage
 export async function getChannelId() {
   try {
     const url = 'http://localhost:8000/channelOnHomepage';
@@ -144,6 +147,18 @@ export async function getChannelId() {
   }
 }
 
+// Get all channels for the youtube videos page
+export async function getChannelsFromDB() {
+  try {
+    const url = 'http://localhost:8000/channels';
+    const data = await axios.get(url);
+    return data.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// Get latest video for the homepage
 export function getVideo(id) {
   const url = `https://www.googleapis.com/youtube/v3/search?key=${API}&channelId=${id}&part=snippet,id&order=date&maxResults=1`;
   return axios.get(url)
@@ -159,6 +174,7 @@ export function getVideo(id) {
   });
 }
 
+// Get all videos from selected channel for the youtube page
 export function getVideos(id) {
   // const result = 1;
   const url = `https://www.googleapis.com/youtube/v3/search?key=${API}&channelId=${id}&part=snippet,id&order=date&maxResults=50`;

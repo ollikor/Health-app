@@ -9,6 +9,8 @@ import '../styles/styles.css';
 
 import { saveChannel, getChannelsFromDB, showOnHomepage, getVideos } from '../api';
 
+import SavedModal from './savedModal';
+import RemovedModal from './removedModal';
 import DeleteModal from './deleteModal';
 
 class YoutubeVideos extends Component {
@@ -27,44 +29,33 @@ class YoutubeVideos extends Component {
     channels: [],
     searchName: '',
     searchId: '',
+    show: false,
     modalShow: false,
-    channelId: ''
+    channelId: '',
+    update: this.props.update
   }
 
   async componentDidMount(){
+    console.log('jee');
     const channels = await getChannelsFromDB();
     this.setState({
       channels: channels
-    })
+    });
+    const id = this.state.channels[0].id;
+    if(this.props.channel !== false){
+      this.getVideos(this.props.channel);
+    }else{
+      this.getVideos(id)
+    }
   }
 
   async getVideos(id) {
     const videos = await getVideos(id);
     this.setState({videos: videos});
+    this.props.addSelectedChannel(id);
   }
 
-  // handleSearch = () => {
-  //   // this.getVideos(id);
-  //   if(this.state.username === null || this.state.selected === '') {
-  //     console.log(this.state.selected);
-  //     this.setState({userError: false});
-  //     this.setState({ userError: true});
-  //   }else{
-  //     switch (this.state.selected) {
-  //       case 'name': this.getuser(this.state.username);
-  //         break;
-  //         case 'id': this.getVideos(this.state.username);
-  //           break;
-  //       default:
-  //         break;
-  //     }
-  //     // this.getuser(this.state.username);
-  //     this.setState({userError: false});
-  //     // this.getVideos(this.state.username)
-  //   }
-  // }
-
-  handleSave = () => {
+  handleSave = async () => {
     if(this.state.saveName === '' || this.state.saveId === '') {
       this.setState({saveError: true});
     }else{
@@ -72,14 +63,35 @@ class YoutubeVideos extends Component {
         name: this.state.saveName,
         id: this.state.saveId
       }
-      saveChannel(newItem);
+      const data = await saveChannel(newItem);
+      if(data.data.n === 1 && data.data.ok === 1){
+        this.setState({
+          showSaved: true,
+          saveName: '',
+          saveId: ''
+        });
+        this.timer();
+      }
     }
+  }
+
+  removed = () => {
+    this.setState({showRemoved: true});
+    this.timer();
+  }
+
+  timer = () => {
+    setTimeout(() => {
+      this.setState({showSaved: false, showRemoved: false});
+    }, 1000);
   }
 
   render() {
     let modalClose = () => this.setState({ modalShow: false });
     return (
       <div className="col-sm-12">
+      <SavedModal show={this.state.showSaved} saved={'Youtube channel added'}/>
+      <RemovedModal show={this.state.showRemoved} removed={'Youtube channel removed'}/>
       <DeleteModal
             title={"Remove bodycomposition"}
             description={"Are you sure that you want to remove this bodycomposition?"}
@@ -116,30 +128,12 @@ class YoutubeVideos extends Component {
             }
             </DropdownButton>
           </ButtonToolbar>
-          {/* <div className="radioContent">
-          <p>Choose type of search</p>
-            <input type="radio" name="value" value="name" onChange={(e) => this.setState({selected: e.target.value})} /> Channel name <br />
-            <input type="radio" name="value" value="id" onChange={(e) => this.setState({selected: e.target.value})} /> Channel id
-          </div>
-          <InputGroup className="mb-3">
-            <FormControl
-              onChange={(e) => this.setState({username: e.target.value})}
-              placeholder="Set channel name"
-              aria-label="Set channel name"
-              aria-describedby="basic-addon2"
-            />
-            <InputGroup.Append>
-              <Button onClick={this.handleSearch} variant="outline-secondary"><FaSearch /></Button>
-            </InputGroup.Append>
-          </InputGroup>
-          {this.state.videos !== null ? <p>{"Channel name: " + this.state.searchName + " " + "Channel id: " + this.state.searchId}</p>:null}
-          {this.state.userError ? <p className="smallError">Set channel name and choose type of search!</p>:null} */}
           <InputGroup className="mb-3">
             <InputGroup.Prepend>
               <InputGroup.Text>Channel name and id</InputGroup.Text>
             </InputGroup.Prepend>
-            <FormControl placeholder="Channel name" onChange={(e) => this.setState({saveName: e.target.value})} />
-            <FormControl placeholder="Channel id" onChange={(e) => this.setState({saveId: e.target.value})} />
+            <FormControl value={this.state.saveName} placeholder="Channel name" onChange={(e) => this.setState({saveName: e.target.value})} />
+            <FormControl value={this.state.saveId} placeholder="Channel id" onChange={(e) => this.setState({saveId: e.target.value})} />
               <InputGroup.Append>
                 <Button onClick={this.handleSave} variant="outline-secondary"><FaSave /></Button>
               </InputGroup.Append>
@@ -164,13 +158,11 @@ class YoutubeVideos extends Component {
 }
 
 const mapStateToProps = state => ({
-  // recipes: state.recipes.recipes,
-  // body: state.body.body
+  channel: state.video.channel,
 });
 
 const mapDispatchToProps = dispatch => ({
-  // addRecipes: recipes => {dispatch({type: 'ADD_RECIPES', recipes})},
-  // addBody: (weight, fat, fatkg, muscle, date) => {dispatch({type: 'ADD_BODY', weight, fat, fatkg, muscle, date})}
+  addSelectedChannel: channel => {dispatch({type: 'ADD_SELECTED_CHANNEL', channel})},
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(YoutubeVideos);

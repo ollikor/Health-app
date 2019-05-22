@@ -202,27 +202,6 @@
   box-shadow: 0px 0px 5px;
   text-align: center;
 }
-.recipesCardContainer:hover {
-  box-shadow: 0px 0px 5px red;
-}
-.recipesCardContainer:hover .recipeCardImage {
-  /* opacity: 0.3; */
-}
-.recipesCardContainer:hover .recipeDeleteIconContent {
-  /* opacity: 1; */
-}
-.recipeDeleteIconContent {
-  /* z-index: 1;
-  transition: .5s ease;
-  position: absolute;
-  right: 0;
-  font-size: 30px;
-  color: red;
-  opacity: 0;
-  padding-right: 10px;
-  /* transform: translate(-0%, -0%);
-  -ms-transform: translate(-50%, -50%); */
-}
 .recipesCardTitle {
   margin: 20px;
   font-size: 20px;
@@ -274,7 +253,7 @@
   padding-top: 0px;
   padding-right: 0px;
   padding-bottom: 54%;
-  margin-bottom: 10px;
+  margin-bottom: 50px;
 }
 .videos {
   position:absolute;

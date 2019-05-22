@@ -15,6 +15,7 @@ class deleteModal extends Component {
 
     removeChannel(urlName, id);
     this.props.onHide();
+    // this.props.removed();
   }
 
   render() {
