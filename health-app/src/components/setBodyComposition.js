@@ -6,7 +6,7 @@ import { FaWeight, FaCalendarDay } from 'react-icons/fa';
 
 import '../styles/styles.css';
 
-import { setBodyComposition, getBodyComposition } from '../api';
+import { setBodyComposition } from '../api';
 
 import SavedModal from './savedModal';
 
@@ -18,8 +18,7 @@ class SetBodyComposition extends Component {
     muscle: '',
     date: '',
     error: false,
-    show: false,
-    smShow: false
+    showSaved: false,
   }
 
   handleSubmit = async (e) => {
@@ -43,11 +42,11 @@ class SetBodyComposition extends Component {
         date: this.state.date,
       }
 
-      setBodyComposition(newItem);
-      const data = await setBodyComposition();
+      // setBodyComposition(newItem);
+      const data = await setBodyComposition(newItem);
       if(data.data.n === 1 && data.data.ok === 1){
         this.setState({
-          show: true,
+          showSaved: true,
           weight: '',
           fat: '',
           muscle: '',
@@ -61,14 +60,14 @@ class SetBodyComposition extends Component {
 
   timer = () => {
     setTimeout(() => {
-      this.setState({show: false});
+      this.setState({showSaved: false});
     }, 1000);
   }
 
   render() {
     return (
       <div className="col-sm-4 setBodyComposition">
-        <SavedModal show={this.state.show} saved={'Body composition added'}/>
+        <SavedModal show={this.state.showSaved} saved={'Body composition added'}/>
         <InputGroup size="default" className="mb-3">
           <InputGroup.Prepend>
             <InputGroup.Text id="inputGroup-sizing-default"><FaWeight /></InputGroup.Text>

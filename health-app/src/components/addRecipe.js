@@ -56,22 +56,12 @@ class AddRecipe extends Component {
         description: this.state.description,
       }
       const data = await addRecipe(newItem);
-      // if(data.data.n === 1 && data.data.ok === 1){
-      //   this.setState({
-      //     show: true,
-      //   });
-      //   this.timer();
+      if(data.data.n === 1 && data.data.ok === 1){
         this.props.onHide();
-      //   this.props.update();
-      // }
+        this.props.update();
+      }
     }
   }
-
-  // timer = () => {
-  //   setTimeout(() => {
-  //     this.setState({show: false});
-  //   }, 1000);
-  // }
 
   AddIngredient = (e) => {
     const ingredient = this.state.ingredient;
@@ -115,7 +105,6 @@ class AddRecipe extends Component {
   render() {
     return (
       <div className="row justify-content-center addRecipeContainer">
-        {/* <SavedModal show={this.state.show} saved={'Body composition added'} /> */}
         <div className="col-sm-6 setBodyinformation">
           <InputGroup size="default" className="mb-3">
             <InputGroup.Prepend>

@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { FaSearch, FaSave } from 'react-icons/fa';
+import { FaSave } from 'react-icons/fa';
 import { InputGroup, FormControl,DropdownButton,Dropdown, Button, ButtonToolbar, } from 'react-bootstrap';
 import '../styles/styles.css';
 
@@ -16,27 +16,19 @@ import DeleteModal from './deleteModal';
 class YoutubeVideos extends Component {
 
   state = {
-    username: null,
     videos: null,
-    thumbnails: null,
-    users: null,
-    userError: false,
     saveError: false,
     videoError: false,
-    selected: '',
     saveName: '',
     saveId: '',
     channels: [],
-    searchName: '',
-    searchId: '',
-    show: false,
+    showSaved: false,
+    showRemoved: false,
     modalShow: false,
     channelId: '',
-    update: this.props.update
   }
 
   async componentDidMount(){
-    console.log('jee');
     const channels = await getChannelsFromDB();
     this.setState({
       channels: channels
@@ -55,6 +47,13 @@ class YoutubeVideos extends Component {
     this.props.addSelectedChannel(id);
   }
 
+  update = (status) => {
+    this.componentDidMount();
+    if(status === "removed") {
+      this.setState({showRemoved: true});
+      this.timer();
+    }
+  }
   handleSave = async () => {
     if(this.state.saveName === '' || this.state.saveId === '') {
       this.setState({saveError: true});
@@ -71,6 +70,7 @@ class YoutubeVideos extends Component {
           saveId: ''
         });
         this.timer();
+        this.update();
       }
     }
   }
@@ -100,6 +100,7 @@ class YoutubeVideos extends Component {
             id={this.state.channelId}
             show={this.state.modalShow}
             onHide={modalClose}
+            update={() => this.update("removed")}
       />
         <div className="row ">
           <ButtonToolbar>

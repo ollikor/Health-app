@@ -1,6 +1,6 @@
 
 const initialState = {
-  recipes: [],
+  recipes: "dsaf",
   // update: false
 }
 

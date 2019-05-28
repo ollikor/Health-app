@@ -8,11 +8,12 @@ class RemovedModal extends Component {
   render() {
     return (
       <Modal
-        {...this.props}
+        show={this.props.show}
+        removed={this.props.removed}
         size="sm"
         aria-labelledby="example-modal-sizes-title-sm"
       >
-          <Modal.Body className="savedBody">dsaf<FaCheckCircle className="savedIcon" /></Modal.Body>
+          <Modal.Body className="savedBody">{this.props.removed}<FaCheckCircle className="savedIcon" /></Modal.Body>
       </Modal>
     );
   }

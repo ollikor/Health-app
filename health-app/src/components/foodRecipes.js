@@ -9,9 +9,11 @@ import '../styles/styles.css';
 import { getRecipes } from '../api';
 
 import AddRecipeModal from './addRecipeModal';
+import RemovedModal from './removedModal';
+import SavedModal from './savedModal';
 import Card from './card';
 
-import pannukakku from '../images/pannukakku.jpg';
+import food from '../images/food.jpg';
 
 class FoodRecipes extends Component {
 
@@ -20,24 +22,44 @@ class FoodRecipes extends Component {
     recipes: [],
     modalShow: false,
     onHide: true,
-    update: false
+    showRemoved: false,
+    showSaved: false,
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.update();
+  }
+
+  update = async (status) => {
     const recipes = await getRecipes();
     this.setState({recipes: recipes});
+    if(status === "saved") {
+      this.setState({showSaved: true});
+      this.timer();
+    }
+    if(status === "removed") {
+      this.setState({showRemoved: true});
+      this.timer();
+    }
+  }
+
+  timer = () => {
+    setTimeout(() => {
+      this.setState({showSaved: false, showRemoved: false});
+    }, 1000);
   }
 
   render() {
-    console.log(this.props.update);
     let modalClose = () => this.setState({ modalShow: false });
 
     return (
       <div className="col-sm-12">
+        <RemovedModal show={this.state.showRemoved} removed={'Recipe removed'} />
+        <SavedModal show={this.state.showSaved} saved={'recipe added'}/>
         <div className="addRecipeContent">
             <button onClick={() => this.setState({modalShow: true})} className="addRecipe">Add recipe</button>
         </div>
-        <AddRecipeModal show={this.state.modalShow} onHide={modalClose} />
+        <AddRecipeModal update={() => this.update("saved")} show={this.state.modalShow} onHide={modalClose} />
         <div className="row">
           {
             this.state.recipes.map((item, index) => (
@@ -46,13 +68,14 @@ class FoodRecipes extends Component {
                 key={index}
                 id={item._id}
                 link={`foodRecipes/${item._id}`}
-                image={pannukakku}
-                title={item.date}
+                image={food}
+                title={item.name}
                 firstData={``}
                 secondData={`${item.duration} min`}
                 thirdData={`${item.portions} portions`}
                 iconOne={<FaHourglassStart />}
                 iconSecond={<FaUtensils />}
+                update={() => this.update("removed")}
               />
             ))}
         </div>

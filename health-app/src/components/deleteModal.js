@@ -1,35 +1,37 @@
 import React from 'react';
 import { Component } from 'react';
-import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import { Button,Modal } from 'react-bootstrap';
 
-import { removeChannel } from '../api';
+import { remove } from '../api';
 
 class deleteModal extends Component {
 
-  handleDelete = () => {
+  handleDelete = async () => {
     const urlName = this.props.url;
     const id = this.props.id;
 
-    removeChannel(urlName, id);
-    this.props.onHide();
-    // this.props.removed();
+    const data = await remove(urlName, id);
+    if(data.n === 1 && data.ok === 1) {
+      this.props.onHide();
+      this.props.update();
+    }
   }
 
   render() {
+    const {title, description, move, onHide} = this.props;
     return (
-      <Modal {...this.props}>
+      <Modal show={this.props.show} onHide={this.props.onHide}>
         <Modal.Header closeButton>
-          <Modal.Title>{this.props.title}</Modal.Title>
+          <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{this.props.description}</Modal.Body>
+        <Modal.Body>{description}</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={this.props.onHide}>
+          <Button variant="secondary" onClick={onHide}>
             Cancel
           </Button>
-          <NavLink className="navLinkCard" to={`${this.props.move}`}>
+          <NavLink className="navLinkCard" to={`${move}`}>
             <Button variant="primary" onClick={this.handleDelete}>
               Remove
             </Button>
@@ -40,12 +42,4 @@ class deleteModal extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  recipes: state.recipes.recipes,
-});
-
-const mapDispatchToProps = dispatch => ({
-  // aaa: (id) => {dispatch({type: 'UPDATE', id})},
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(deleteModal);
+export default deleteModal;

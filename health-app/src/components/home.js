@@ -1,8 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
 
-import { connect } from 'react-redux';
-
 import '../styles/styles.css';
 import { FaHourglassStart, FaUtensils } from 'react-icons/fa';
 
@@ -11,7 +9,7 @@ import { getLatestBodyComposition, getLatestRecipe, getChannelId } from '../api'
 import Card from './card';
 import VideoCard from './videoCard';
 
-import pannukakku from '../images/pannukakku.jpg';
+import food from '../images/food.jpg';
 import body from '../images/body.jpg';
 
 
@@ -35,7 +33,6 @@ class Home extends Component {
   }
 
   render() {
-    console.log(this.state.latestVideo)
     const {
       latestData,
       latestRecipe,
@@ -57,7 +54,7 @@ class Home extends Component {
           <Card
             showDelete={false}
             link={`foodRecipes/${latestRecipe._id}`}
-            image={pannukakku}
+            image={food}
             alt={"recipe"}
             title={"Latest recipe"}
             firstData={`${latestRecipe.name}`}
@@ -83,14 +80,4 @@ class Home extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  // recipes: state.recipes.recipes,
-  // body: state.body.body
-});
-
-const mapDispatchToProps = dispatch => ({
-  // addRecipes: recipes => {dispatch({type: 'ADD_RECIPES', recipes})},
-  // addBody: (weight, fat, fatkg, muscle, date) => {dispatch({type: 'ADD_BODY', weight, fat, fatkg, muscle, date})}
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

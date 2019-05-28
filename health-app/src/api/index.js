@@ -1,10 +1,20 @@
 import axios from 'axios';
 
+const API = 'add api key';
+
+// All page
+// Remove items using id
+export async function remove(urlName, id) {
+  try {
+    const url = `http://localhost:8000/${urlName}${id}`;
+    const {data} = await axios.delete(url);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 // Bodycompositions api calls
-
-const API = '';
-
 // Get latest bodycomposition for the homepage
 export async function getLatestBodyComposition() {
     try {
@@ -53,7 +63,6 @@ export async function setBodyComposition(newItem) {
 }
 
 // Recipes api calls
-
 // Get all recipes for the food recipes page
 export async function getRecipes() {
   try {
@@ -100,23 +109,12 @@ export async function addRecipe(newItem) {
 
 
 // Youtube videos api calls
-
 // Save youtube channel using channel name and id
 export async function saveChannel(newItem) {
   try {
     const url = 'http://localhost:8000/channels';
     const data = await axios.post(url, newItem)
     return data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-// Remove youtube channel using id
-export async function removeChannel(urlName, id) {
-  try {
-    const url = `http://localhost:8000/${urlName}${id}`;
-    await axios.delete(url)
   } catch (error) {
     console.log(error);
   }
@@ -159,66 +157,31 @@ export async function getChannelsFromDB() {
 }
 
 // Get latest video for the homepage
-export function getVideo(id) {
-  const url = `https://www.googleapis.com/youtube/v3/search?key=${API}&channelId=${id}&part=snippet,id&order=date&maxResults=1`;
-  return axios.get(url)
-  .then((response) => {
-      const thumbnail = response.data.items[0].snippet.thumbnails.high.url;
-      const videoId = response.data.items.map(item => item.id.videoId);
-      const channelTitle = response.data.items[0].snippet.channelTitle;
-      const title = response.data.items[0].snippet.title;
-      return {thumbnail, channelTitle, title, videoId};
-  })
-  .catch(function(error){
-      console.log(error);
-  });
+export async function getVideo(id) {
+  try{
+    const url = `https://www.googleapis.com/youtube/v3/search?key=${API}&channelId=${id}&part=snippet,id&order=date&maxResults=1`;
+    const {data} = await axios.get(url)
+    const thumbnail = data.items[0].snippet.thumbnails.high.url;
+    const videoId = data.items.map(item => item.id.videoId);
+    const channelTitle = data.items[0].snippet.channelTitle;
+    const title = data.items[0].snippet.title;
+    return {thumbnail, channelTitle, title, videoId};
+  }catch (error) {
+    console.log(error);
+  }
 }
 
 // Get all videos from selected channel for the youtube page
-export function getVideos(id) {
-  // const result = 1;
-  const url = `https://www.googleapis.com/youtube/v3/search?key=${API}&channelId=${id}&part=snippet,id&order=date&maxResults=50`;
-  return axios.get(url)
-  .then((response) => {
-    const video = response.data.items.map(item => ({
-      video: item.id.videoId,
-      thumbnail: item.snippet.thumbnails.high.url
-    }));
-    return video;
-  })
-  .catch(function(error){
+export async function getVideos(id) {
+  try{
+    const url = `https://www.googleapis.com/youtube/v3/search?key=${API}&channelId=${id}&part=snippet,id&order=date&maxResults=50`;
+    const {data} = await axios.get(url);
+      const video = data.items.map(item => ({
+        video: item.id.videoId,
+        thumbnail: item.snippet.thumbnails.high.url
+      }));
+      return video;
+}catch (error) {
       console.log(error);
-  });
+  };
 }
-
-// getuser = (userName) => {
-//   // const url = `https://www.googleapis.com/youtube/v3/channels?key=${API}&forUsername=eeddspeaks&part=contentDetails&maxResult=5`;
-//   const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&forUsername=${userName}&key=${API}`;
-//   // const url = `https://www.googleapis.com/youtube/v3/channels?key=${API}&forUsername=${this.state.username}&part=snippet`;
-//   let users = null;
-//   let id = null;
-//   axios.get(url)
-//   .then((response) => {
-//     console.log(response);
-//     console.log(response.data.items[0].id);
-//     console.log(response.data.items[0].snippet.customUrl);
-//       users = response.data.items;
-//       if(users.length > 0) {
-//         // this.getVideos(id);
-//         users.map(user => (
-//           id = user.id
-//         ));
-//         this.setState({
-//           videoError: false,
-//           searchName: response.data.items[0].snippet.customUrl,
-//           searchId: response.data.items[0].id,
-//         });
-//         this.getVideos(id);
-//       }else{
-//         this.setState({videoError: true, videos: null});
-//       }
-//   })
-//   .catch(function(error){
-//       console.log(error);
-//   });
-// }

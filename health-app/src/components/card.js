@@ -3,11 +3,10 @@ import { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import '../styles/styles.css';
 
-import { FaHourglassStart, FaUtensils, FaGripfire, FaTrash } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
 
 import DeleteModal from './deleteModal';
 
-import { getRecipe, getRecipes } from '../api';
 
 class Card extends Component {
 
@@ -18,14 +17,12 @@ class Card extends Component {
     update: false
   }
 
-  // update = () => {
-  //   console.log('card updete');
-  //   this.props.update();
-  // }
+  update = () => {
+    this.props.update();
+  }
 
   render() {
     let modalClose = () => this.setState({ modalShow: false });
-    // console.log(this.props.update);
     const {
       id,
       link,
@@ -50,6 +47,7 @@ class Card extends Component {
           id={id}
           show={this.state.modalShow}
           onHide={modalClose}
+          update={() => this.update()}
         />
         <div className="cardContainer">
           {showDelete ?

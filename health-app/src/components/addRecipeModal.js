@@ -7,13 +7,15 @@ import AddRecipe from './addRecipe';
 
 class AddRecipeModal extends Component {
 
-  update2 = () => {
+  update = () => {
+    this.props.update();
   }
 
   render() {
     return (
       <Modal
-        {...this.props}
+        onHide={this.props.onHide}
+        show={this.props.show}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -24,7 +26,7 @@ class AddRecipeModal extends Component {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <AddRecipe onHide={this.props.onHide}/>
+          <AddRecipe update={() => this.update()} onHide={this.props.onHide}/>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.props.onHide}>Close</Button>
