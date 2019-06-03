@@ -3,15 +3,14 @@ const initialState = {
   channel: false,
 }
 
-const body = (state = initialState, action) => {
+const channel = (state = initialState, action) => {
   switch (action.type) {
     case 'GET_SELECTED_CHANNEL':
       return state
     case 'ADD_SELECTED_CHANNEL':
       let newState = {...state};
       newState = {
-        channel: action.channel,
-        update: !state.update
+        channel: action.channel
       };
       return newState
     default:
@@ -19,4 +18,4 @@ const body = (state = initialState, action) => {
   }
 }
 
-export default body;
+export default channel;

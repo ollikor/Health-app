@@ -1,6 +1,5 @@
 import React from 'react';
 import { Component } from 'react';
-import { connect } from 'react-redux';
 
 import { FaHourglassStart, FaUtensils } from 'react-icons/fa';
 
@@ -84,13 +83,4 @@ class FoodRecipes extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  // recipes: state.recipes.recipes,
-  // update: state.recipes.update
-});
-
-const mapDispatchToProps = dispatch => ({
-  // addRecipes: recipes => {dispatch({type: 'ADD_RECIPES', recipes})},
-});
-
-export default connect( mapStateToProps, mapDispatchToProps)(FoodRecipes);
+export default FoodRecipes;

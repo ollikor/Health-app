@@ -9,9 +9,6 @@ import '../styles/styles.css';
 
 import { addRecipe } from '../api';
 
-import SavedModal from './savedModal';
-
-
 class AddRecipe extends Component {
 
 
